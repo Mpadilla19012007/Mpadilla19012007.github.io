@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>May-Beauty | Tienda de Belleza</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff7fa;
+            color: #4a2635;
+        }
+
+        header {
+            background: #f8bbd0;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #880e4f;
+            font-size: 35px;
+        }
+
+        header p {
+            margin-top: 8px;
+        }
+
+        nav {
+            background: #880e4f;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f8bbd0;
+        }
+
+        .portada {
+            text-align: center;
+            padding: 55px 20px;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+        }
+
+        .portada h2 {
+            font-size: 32px;
+            color: #880e4f;
+            margin-bottom: 15px;
+        }
+
+        .portada p {
+            margin-bottom: 20px;
+        }
+
+        .buscador {
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        .buscador input {
+            width: 90%;
+            max-width: 450px;
+            padding: 13px;
+            border: 1px solid #e8a4bb;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .categorias {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .categorias button {
+            padding: 11px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 20px;
+            background: #ec407a;
+            color: white;
+            cursor: pointer;
+        }
+
+        .categorias button:hover {
+            background: #880e4f;
+        }
+
+        .titulo {
+            text-align: center;
+            color: #880e4f;
+            margin: 25px 0;
+            font-size: 27px;
+        }
+
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 20px 5%;
+        }
+
+        .producto {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 4px 12px #00000012;
+            transition: transform 0.3s;
+        }
+
+        .producto:hover {
+            transform: translateY(-5px);
+        }
+
+        .producto img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: #fce4ec;
+        }
+
+        .producto h3 {
+            color: #880e4f;
+            margin: 15px 5px 8px;
+        }
+
+        .producto p {
+            margin: 8px;
+            color: #74515f;
+        }
+
+        .precio {
+            font-size: 20px;
+            color: #d81b60 !important;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #880e4f;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 35px;
+        }
+
+        .oculto {
+            display: none;
+        }
+        
+/* Animación de las imágenes */
+.producto img {
+    cursor: zoom-in;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.producto img:hover {
+    transform: scale(1.05);
+    filter: brightness(0.95);
+}
+
+/* Fondo de la ventana de imagen */
+.modal-imagen {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(45, 10, 28, 0.88);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-imagen.activo {
+    display: flex;
+}
+
+.contenido-modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90%;
+    max-height: 90vh;
+}
+
+.contenido-modal img {
+    display: block;
+    max-width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    border: 4px solid white;
+    border-radius: 15px;
+    background: white;
+}
+
+#nombreImagen {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.cerrar-modal,
+.cambiar-imagen {
+    position: absolute;
+    border: none;
+    color: white;
+    background: #ec407a;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cerrar-modal {
+    top: -15px;
+    right: -15px;
+    width: 42px;
+    height: 42px;
+    font-size: 28px;
+    z-index: 2;
+}
+
+.cambiar-imagen {
+    top: 45%;
+    width: 45px;
+    height: 45px;
+    font-size: 28px;
+}
+
+.anterior {
+    left: -60px;
+}
+
+.siguiente {
+    right: -60px;
+}
+
+.cerrar-modal:hover,
+.cambiar-imagen:hover {
+    background: #880e4f;
+}
+
+@media (max-width: 600px) {
+    .contenido-modal {
+        max-width: 95%;
+    }
+
+    .anterior {
+        left: 5px;
+    }
+
+    .siguiente {
+        right: 5px;
+    }
+
+    .cambiar-imagen {
+        top: auto;
+        bottom: 65px;
+    }
+}
+
+/* Botón Ver catálogo */
+.boton-catalogo {
+    display: inline-block;
+    background: #ffffff;
+    color: #000000;
+    padding: 14px 35px;
+    border: 2px solid #000000;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px #00000015;
+}
+
+.boton-catalogo:hover {
+    background: #000000;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px #00000030;
+}
+
+/* Fondo general rosado claro */
+body {
+    background: #fff0f5;
+}
+
+/* Encabezado rosado con borde grueso */
+header {
+    margin: 15px 20px;
+    background: #ffc1d6;
+    border: 4px solid #c2185b;
+    border-radius: 18px;
+}
+
+/* Portada con degradado rosado */
+.portada {
+    margin: 20px;
+    background: linear-gradient(135deg, #fff0f5, #ffb6cf);
+    border: 5px solid #c2185b;
+    border-radius: 22px;
+}
+
+/* Título de la portada */
+.portada h2 {
+    color: #880e4f;
+}
+
+/* Título del catálogo */
+.titulo {
+    color: #ad1457;
+    margin: 30px 20px;
+}
+
+/* Tarjetas de productos */
+.producto {
+    background: #ffffff;
+    border: 3px solid #d81b60;
+    border-radius: 18px;
+    box-shadow: 0 5px 12px #880e4f30;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Efecto al pasar el mouse */
+.producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px #880e4f50;
+}
+
+/* Borde inferior de las imágenes */
+.producto img {
+    border-bottom: 3px solid #d81b60;
+}
+
+/* Precio en rosado oscuro */
+.precio {
+    color: #c2185b !important;
+}
+
+/* Pie de página */
+footer {
+    margin: 25px 20px 15px;
+    background: #ad1457;
+    border: 4px solid #880e4f;
+    border-radius: 18px;
+}
+
+/* Adaptación para celulares */
+@media (max-width: 600px) {
+    header,
+    .portada,
+    footer {
+        margin-left: 10px;
+        margin-right: 10px;
+        border-width: 3px;
+    }
+
+    .productos {
+        padding: 15px;
+        gap: 18px;
+    }
+}
+
+header h1,
+.portada h2,
+.titulo {
+    font-family: "New York", "Bodoni 72", "Didot", "Times New Roman", serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Fuente Trajanus Roma para el resto de los textos */
+body,
+p,
+a,
+button,
+label,
+input,
+textarea,
+select,
+.producto,
+.producto h3,
+.producto p,
+.precio,
+footer {
+    font-family: "Trajanus Roma", "Trajan Pro", "Cinzel", serif;
+}
+
+/* Mantener los títulos principales con estilo New York */
+header h1,
+.portada h2,
+.titulo {
+    font-family: "New York", "Bodoni 72", "Didot", "Times New Roman", serif;
+}
+
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🌸  May-Beauty 🌸</h1>
+        <p>Tu belleza, tu estilo, tu esencia</p>
+    </header>
+
+    <section class="portada" id="inicio">
+        <h2>Descubre tu belleza</h2>
+        <p>Encuentra tus productos favoritos de maquillaje y cuidado facial.</p>
+        <a href="#catalogo" class="boton-catalogo">
+        Ver catálogo →
+        </a>
+    </section>
+
+    <h2 class="titulo" id="catalogo">Nuestro catálogo</h2>
+
+    <section class="productos" id="productos"></section>
+    
+<!-- Ventana interactiva de imágenes -->
+<div class="modal-imagen" id="modalImagen"
+     onclick="cerrarImagenFondo(event)">
+
+    <div class="contenido-modal">
+
+        <button class="cerrar-modal"
+                onclick="cerrarImagen()"
+                aria-label="Cerrar imagen">×</button>
+
+        <button class="cambiar-imagen anterior"
+                onclick="cambiarImagen(-1)"
+                aria-label="Imagen anterior">‹</button>
+
+        <img id="imagenAmpliada" src="" alt="Producto ampliado">
+
+        <p id="nombreImagen"></p>
+
+        <button class="cambiar-imagen siguiente"
+                onclick="cambiarImagen(1)"
+                aria-label="Imagen siguiente">›</button>
+
+    </div>
+</div>
+
+
+    <footer>
+        <h3>May-Beauty 💗</h3>
+        <p>Productos de belleza y cuidado facial</p>
+        <p>© 2026 May-Beauty - Todos los derechos reservados</p>
+        <p>Contacto: 3226384544</p>
+        <p>Redes Sociales:  May-beauty</p>
+    </footer>
+
+    <script>
+
+        
+const productos = [
+    {
+        nombre: "Enchinador",
+        categoria: "Maquillaje",
+        precio: 8000,
+        imagen: "https://casagutza.com/cdn/shop/files/ENCHINADOR-DE-ARO.png?v=1759679232",
+        descripcion: "Enchinador para dar forma a tus pestañas."
+    },
+    {
+        nombre: "Parches",
+        categoria: "Limpieza facial",
+        precio: 5000,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCJju65rZyen1KKhJxOmHaEIpa8k8gclyAJfxE_9MGCDXB_wvag28zhGSV&s=10",
+        descripcion: "Parche Acne."
+    },
+    {
+        nombre: "Set de mini esponjas",
+        categoria: "Maquillaje",
+        precio: 6000,
+        imagen: "https://burbay.co/cdn/shop/files/AS0056.jpg?v=1763762138",
+        descripcion: "Mini esponjas para aplicar base y corrector."
+    },
+    {
+        nombre: "Borlas grandes",
+        categoria: "Maquillaje",
+        precio: 3000,
+        imagen: "https://www.hotmax.com.ar/image/cache/catalog/6%20minis%20naez-550x550.png",
+        descripcion: "Borlas para aplicar polvos faciales."
+    },
+    {
+        nombre: "Balaca",
+        categoria: "Accesorios",
+        precio: 9500,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv8r5TWoCoQBrQw_hBNOoyHIWWNuNovPah0Rnq1xaJwdk8IMNMt9TvdFJG&s=10",
+        descripcion: "Balaca para retirar el cabello del rostro al maquillarte."
+    },
+    {
+        nombre: "Lip sérum",
+        categoria: "Maquillaje",
+        precio: 7000,
+        imagen: "https://www.magicstudiomakeup.com/wp-content/uploads/2023/10/90168.jpg",
+        descripcion: "Sérum para cuidar e hidratar los labios."
+    },
+    {
+        nombre: "Pestañina Prosa",
+        categoria: "Maquillaje",
+        precio: 20000,
+        imagen: "https://miranda.com.co/cdn/shop/files/8AD50E02-05E0-4E01-8293-CFF03158F2E8.jpg?v=1752890861&width=1946",
+        descripcion: "Pestañina para realzar tus pestañas."
+    },
+    {
+        nombre: "Pestañina SKY",
+        categoria: "Maquillaje",
+        precio: 10000,
+        imagen: "https://cibermake.com/wp-content/uploads/2023/08/Pestanina_Sky-High_lavable_Maybelline.jpg",
+        descripcion: "Pestañina para una mirada llamativa."
+    },
+    {
+        nombre: "Gloss",
+        categoria: "Maquillaje",
+        precio: 6500,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVn9Dni0eUZXgbmVIWy-nSDl3iw02ySO6lp4Ac3XdyOBpinuy7WpVF9zw&s=10",
+        descripcion: "Brillo labial para un acabado luminoso."
+    },
+    {
+        nombre: "Tinta",
+        categoria: "Maquillaje",
+        precio: 6000,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwjKCUMHIbujKtsYmPg-3z_Us8CufbKHqzjuhsWF61K0bCrswT91AldIA&s=10",
+        descripcion: "Tinta para aportar color a tus labios."
+    },
+    {
+        nombre: "Gel de cejas",
+        categoria: "Maquillaje",
+        precio: 11000,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7o5tJWkiD6Qgqusq8LQ3uVFTM-8sIPKM80crz1CEv0VTGxnxjK76KrCth&s=10",
+        descripcion: "Gel para peinar y fijar las cejas."
+    },
+    {
+        nombre: "Rubor en crema",
+        categoria: "Maquillaje",
+        precio: 9400,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK0vh_w9wF9cA1vgORe3T78FaKiJ3D6NxALgQ6y5-fpEYIu95x4jJwdYvN&s=10",
+        descripcion: "Rubor cremoso para dar color a tus mejillas."
+    },
+    {
+        nombre: "Iluminador dorado",
+        categoria: "Maquillaje",
+        precio: 8500,
+        imagen: "https://vierosecosmetics.cl/wp-content/uploads/2024/10/goldenmind.png",
+        descripcion: "Iluminador para aportar brillo al rostro."
+    },
+    {
+        nombre: "Lápiz de labios",
+        categoria: "Maquillaje",
+        precio: 2500,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8gbcih8IzicqPM8iB-_sb979NmsYUbW57M-zi5ZX9cSjxkpT-X2cjVOmw&s=10",
+        descripcion: "Lápiz para definir el contorno de los labios."
+    },
+    {
+        nombre: "Lápiz de ojos",
+        categoria: "Maquillaje",
+        precio: 2500,
+        imagen: "https://distribuidorajyrmayoristas.com/wp-content/uploads/2024/03/3-1.jpg",
+        descripcion: "Lápiz para resaltar tu mirada."
+    },
+    {
+        nombre: "Gachos de flor",
+        categoria: "Accesorios",
+        precio: 7500,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZn-tbyMIm195P81P7Oe7h_mHtG4IgWX5rRL5FKMwUDTk-PG3O7xxhcps&s=10",
+        descripcion: "Ganchos de flores para decorar tu cabello."
+    },
+    {
+        nombre: "Polvo banana",
+        categoria: "Maquillaje",
+        precio: 9000,
+        imagen: "https://http2.mlstatic.com/D_NQ_NP_657494-MLA113775599987_062026-O.webp",
+        descripcion: "Polvo banana para sellar el maquillaje."
+    },
+    {
+        nombre: "Corrector Super Stay",
+        categoria: "Maquillaje",
+        precio: 15000,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROylxMYrK52jqW-NlOClvRCrM24cxxDh2FfD9AQSjXPN26bc1Qejo2euY&s=10",
+        descripcion: "Corrector para ayudar a unificar el tono."
+    },
+    {
+        nombre: "Corrector Bloomshell",
+        categoria: "Maquillaje",
+        precio: 20000,
+        imagen: "https://santorinibisuteria.com/cdn/shop/files/TONOS_2.png?v=1771685983",
+        descripcion: "Corrector para completar tu maquillaje."
+    },
+    {
+        nombre: "Corrector Ani-k",
+        categoria: "Maquillaje",
+        precio: 20000,
+        imagen: "https://bonitaexpress.co/wp-content/uploads/2025/04/Corrector-AniK-Nueva-presentacion.jpg",
+        descripcion: "Corrector para un acabado uniforme."
+    },
+    {
+        nombre: "Polvo suelto",
+        categoria: "Maquillaje",
+        precio: 10000,
+        imagen: "https://http2.mlstatic.com/D_NQ_NP_799466-MCO112310213994_062026-O.webp",
+        descripcion: "Polvo suelto para sellar el maquillaje."
+    },
+    {
+        nombre: "Pestañas",
+        categoria: "Maquillaje",
+        precio: 7500,
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVspCJ3epiUnwPLeC09G1QCupHMGLscdHBP-ftSTEfQkl-nlc6ddeg1Ud6&s=10",
+        descripcion: "Pestañas postizas para complementar tu look."
+    }
+];
+
+let productosVisibles = [];
+let indiceImagenActual = 0;
+
+function abrirImagen(indice) {
+    if (indice < 0 || indice >= productosVisibles.length) {
+        return;
+    }
+
+    indiceImagenActual = indice;
+    actualizarImagenAmpliada();
+
+    document.getElementById("modalImagen").classList.add("activo");
+    document.body.style.overflow = "hidden";
+}
+
+function actualizarImagenAmpliada() {
+    const producto = productosVisibles[indiceImagenActual];
+
+    document.getElementById("imagenAmpliada").src = producto.imagen;
+    document.getElementById("imagenAmpliada").alt = producto.nombre;
+    document.getElementById("nombreImagen").textContent =
+        producto.nombre + " - " +
+        producto.precio.toLocaleString("es-CO", {
+            style: "currency",
+            currency: "COP",
+            maximumFractionDigits: 0
+        });
+}
+
+function cambiarImagen(direccion) {
+    if (productosVisibles.length === 0) {
+        return;
+    }
+
+    indiceImagenActual += direccion;
+
+    if (indiceImagenActual >= productosVisibles.length) {
+        indiceImagenActual = 0;
+    }
+
+    if (indiceImagenActual < 0) {
+        indiceImagenActual = productosVisibles.length - 1;
+    }
+
+    actualizarImagenAmpliada();
+}
+
+function cerrarImagen() {
+    document.getElementById("modalImagen").classList.remove("activo");
+    document.body.style.overflow = "";
+}
+
+function cerrarImagenFondo(evento) {
+    if (evento.target.id === "modalImagen") {
+        cerrarImagen();
+    }
+}
+
+document.addEventListener("keydown", function(evento) {
+    const modal = document.getElementById("modalImagen");
+
+    if (!modal.classList.contains("activo")) {
+        return;
+    }
+
+    if (evento.key === "Escape") {
+        cerrarImagen();
+    }
+
+    if (evento.key === "ArrowRight") {
+        cambiarImagen(1);
+    }
+
+    if (evento.key === "ArrowLeft") {
+        cambiarImagen(-1);
+    }
+});
+
+        function mostrarProductos(lista) {
+            productosVisibles = lista;
+            const contenedor = document.getElementById("productos");
+            contenedor.innerHTML = "";
+
+            lista.forEach(producto => {
+                const tarjeta = document.createElement("article");
+                tarjeta.className = "producto";
+
+                const imagen = document.createElement("img");
+                imagen.src = producto.imagen;
+                imagen.alt = producto.nombre;
+                imagen.loading = "lazy";
+                imagen.onclick = function () {
+    abrirImagen(productosVisibles.indexOf(producto));
+};
+
+                imagen.onerror = function () {
+                    this.onerror = null;
+                    this.src = "https://placehold.co/400x300/fce4ec/880e4f?text=" +
+                        encodeURIComponent(producto.nombre);
+                };
+
+                const nombre = document.createElement("h3");
+                nombre.textContent = producto.nombre;
+
+                const categoria = document.createElement("p");
+                categoria.textContent = producto.categoria;
+
+                const descripcion = document.createElement("p");
+                descripcion.textContent = producto.descripcion;
+
+                const precio = document.createElement("p");
+                precio.className = "precio";
+                precio.textContent = producto.precio.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                    maximumFractionDigits: 0
+                });
+
+                tarjeta.append(
+                imagen,
+                nombre,
+                categoria,
+                descripcion,
+                precio
+                );
+
+                contenedor.appendChild(tarjeta);
+            });
+
+            if (lista.length === 0) {
+                contenedor.textContent = "No se encontraron productos.";
+            }
+        }
+
+        function filtrar(categoria) {
+            document.getElementById("buscar").value = "";
+
+            if (categoria === "Todos") {
+                mostrarProductos(productos);
+            } else {
+                mostrarProductos(
+                    productos.filter(p => p.categoria === categoria)
+                );
+            }
+        }
+
+        function buscarProductos() {
+            const texto = document.getElementById("buscar").value.toLowerCase();
+
+            const resultado = productos.filter(p =>
+                p.nombre.toLowerCase().includes(texto) ||
+                p.categoria.toLowerCase().includes(texto)
+            );
+
+            mostrarProductos(resultado);
+        }
+
+        function agregarCarrito(producto) {
+            carrito.push(producto);
+            actualizarCarrito();
+        }
+
+        function actualizarCarrito() {
+            const lista = document.getElementById("listaCarrito");
+            lista.innerHTML = "";
+            let total = 0;
+
+            carrito.forEach((producto, indice) => {
+                total += producto.precio;
+
+                const elemento = document.createElement("li");
+                elemento.textContent =
+                    producto.nombre + " - " +
+                    producto.precio.toLocaleString("es-CO") + " COP ";
+
+                const boton = document.createElement("button");
+                boton.textContent = "Eliminar";
+
+                boton.onclick = () => {
+                    carrito.splice(indice, 1);
+                    actualizarCarrito();
+                };
+
+                elemento.appendChild(boton);
+                lista.appendChild(elemento);
+            });
+
+            document.getElementById("contador").textContent = carrito.length;
+
+            document.getElementById("total").textContent =
+                "Total: " + total.toLocaleString("es-CO") + " COP";
+        }
+
+        function vaciarCarrito() {
+            carrito = [];
+            actualizarCarrito();
+        }
+
+        function finalizarCompra() {
+            if (carrito.length === 0) {
+                alert("Tu carrito está vacío.");
+                return;
+            }
+
+            alert(
+                "Esta es una demostración. Para recibir pagos reales debes conectar una plataforma de pago."
+            );
+        }
+
+        mostrarProductos(productos);
+
+    </script>
+
+</body>
+</html>
+
